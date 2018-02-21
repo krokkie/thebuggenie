@@ -427,12 +427,22 @@
          * @retval string
          *   Prepared filter.
          */
+
+	public static function ldap_escape($string) {
+	    if (function_exists('ldap_escape')) {
+                return ldap_escape($string, null, LDAP_ESCAPE_FILTER);
+            } else {
+                return str_replace(array('*', '\\', '(', ')'), array('\\*', '\\\\', '\\(', '\\)'), $string);
+            }
+        }
+
+
         protected function _prepareFilter($filter, $replacements)
         {
             if (!empty($replacements))
             {
                 $filter = str_replace(array_keys($replacements),
-                                      array_map(function($value) { return ldap_escape($value, null, LDAP_ESCAPE_FILTER); },
+                                      array_map(function($value) { return self::ldap_escape($value); },
                                                 array_values($replacements)), $filter);
             }
 
