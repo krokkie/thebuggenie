@@ -26,7 +26,11 @@
             }
             else
             {
-                $this->recurse($structure->parts);
+                if(!isset($structure->parts)) {
+                    $this->recurse(array('onlyone' => $structure));
+                } else {
+                    $this->recurse($structure->parts);
+                }
                 return true;
             }
         }
